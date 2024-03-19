@@ -1,0 +1,7 @@
+torch==1.12.1+cu116
+torchvision==0.13.1+cu116
+pytorch-lightning==1.9.0
+torchio==0.18.86
+numpy==1.21.5
+monai==1.1.0
+nibabel==4.0.2

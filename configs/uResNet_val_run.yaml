@@ -1,0 +1,43 @@
+model:
+  class_path: models.lightning_modules.uResNet.uResNet_LightningModule
+  init_args:
+    network:
+      class_path: models.networks.uResNet.uResNet_Network
+    criterion:
+      class_path: torch.nn.CrossEntropyLoss
+    patch_size: [64, 64, 1]
+    write_path: C:\Users\s2452792\uResNet_data\test_predictions
+data:
+  class_path: data.data_modules.uResNet.uResNet_DataModule
+  init_args:
+    data_root: C:\Users\s2452792\uResNet_data
+    patch_size: ${model.init_args.patch_size}
+    transforms_train:
+      class_path: torchio.transforms.RandomFlip
+      init_args:
+        axes: 0
+        flip_probability: 0.5
+    val_run: False
+optimizer:
+  class_path: torch.optim.Adam
+  init_args:
+    lr: 0.0005
+lr_scheduler:
+  class_path: models.schedulers.uResNet.uResNet_Scheduler
+trainer:
+  default_root_dir: logs\uResNet
+  accelerator: gpu
+  devices: 1
+  precision: 32
+  max_epochs: 500
+  check_val_every_n_epoch: 10
+  deterministic: warn
+  track_grad_norm: 2
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: 'epoch'
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        save_on_train_epoch_end: True
+seed_everything: 123
